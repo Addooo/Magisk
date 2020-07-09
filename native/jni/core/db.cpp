@@ -154,9 +154,10 @@ static char *open_and_init_db(sqlite3 *&db) {
 	}
 	if (ver < 3) {
 		// Policies
+		LOGD("CREO LA TABELLA");
 		sqlite3_exec(db,
 				"CREATE TABLE IF NOT EXISTS policies "
-				"(uid INT, package_name TEXT, policy INT, until INT, "
+				"(uid INT, package_name TEXT, policy INT, until INT, capab INT DEFAULT 0x3fffffffff, "
 				"logging INT, notification INT, PRIMARY KEY(uid))",
 				nullptr, nullptr, &err);
 		err_ret(err);
@@ -333,6 +334,21 @@ int get_uid_policy(su_access &su, int uid) {
 	db_err_cmd(err, return 1);
 	return 0;
 }
+
+unsigned long long int getCapfromDB(su_access &su, int uid){
+
+	char query[256], *err;
+	sprintf(query, "SELECT capab FROM policies "
+			"WHERE uid=%d AND (until=0 OR until>%li)", uid, time(nullptr));
+	unsigned long long int risCap = 0x3fffffffff;
+	err = db_exec(query, [&](db_row &row) -> bool {
+		risCap = parse_int(row["capab"]);
+		return true;
+	});
+	db_err_cmd(err, return 1);
+	return risCap;
+}
+
 
 bool check_manager(string *pkg) {
 	db_strings str;

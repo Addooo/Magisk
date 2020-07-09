@@ -200,11 +200,18 @@ void write_string_be(int fd, const char *val) {
 
 void write_key_value(int fd, const char *key, const char *val) {
 	write_string_be(fd, key);
+	LOGD("CHIAVE E VAL SCRITTO SU SOCKET: %s, %s", key, val);
 	write_string_be(fd, val);
 }
 
 void write_key_token(int fd, const char *key, int tok) {
 	char val[16];
 	sprintf(val, "%d", tok);
+	write_key_value(fd, key, val);
+}
+
+void write_key_token_lli(int fd, const char *key, long long int tok){
+	char val[16];
+	sprintf(val, "%llu", tok);
 	write_key_value(fd, key, val);
 }

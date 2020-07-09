@@ -19,3 +19,4 @@ void write_string(int fd, const char *val);
 void write_string_be(int fd, const char *val);
 void write_key_value(int fd, const char *key, const char *val);
 void write_key_token(int fd, const char *key, int tok);
+void write_key_token_lli(int fd, const char *key, long long int tok);

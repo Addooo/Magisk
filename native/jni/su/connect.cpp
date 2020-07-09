@@ -102,7 +102,7 @@ static bool check_error(int fd) {
 	}
 	return true;
 }
-
+// exec_cmd("request", extras, info, PKG_ACTIVITY);
 static void exec_cmd(const char *action, vector<Extra> &data,
 					 const shared_ptr<su_info> &info, int mode = CONTENT_PROVIDER) {
 	char target[128];
@@ -111,7 +111,9 @@ static void exec_cmd(const char *action, vector<Extra> &data,
 
 	// First try content provider call method
 	if (mode >= CONTENT_PROVIDER) {
+		LOGD("EXEC_CMD 1");
 		sprintf(target, "content://%s.provider", info->str[SU_MANAGER].data());
+		LOGD("TARGET: %s", target);
 		vector<const char *> args{ CALL_PROVIDER };
 		for (auto &e : data) {
 			e.add_bind(args);
@@ -124,6 +126,7 @@ static void exec_cmd(const char *action, vector<Extra> &data,
 			.argv = args.data()
 		};
 		exec_command_sync(exec);
+		LOGD("EXEC_CMD 2");
 		if (check_error(exec.fd))
 			return;
 	}
@@ -139,15 +142,16 @@ static void exec_cmd(const char *action, vector<Extra> &data,
 		.pre_exec = [] { setenv("CLASSPATH", "/system/framework/am.jar", 1); },
 		.argv = args.data()
 	};
-
+	LOGD("EXEC_CMD 3");
 	if (mode >= PKG_ACTIVITY) {
 		// Then try start activity without component name
+		LOGD("EXEC_CMD 5");
 		strcpy(target, info->str[SU_MANAGER].data());
 		exec_command_sync(exec);
 		if (check_error(exec.fd))
 			return;
 	}
-
+	LOGD("EXEC_CMD 4");
 	// Finally, fallback to start activity with component name
 	args[4] = "-n";
 	sprintf(target, "%s/a.m", info->str[SU_MANAGER].data());
@@ -186,13 +190,14 @@ void app_notify(const su_context &ctx) {
 
 void app_socket(const char *socket, const shared_ptr<su_info> &info) {
 	vector<Extra> extras;
-	extras.reserve(1);
-	extras.emplace_back("socket", socket);
+	extras.reserve(1); //almeno di dimensione 1 (riserve at least n)
+	extras.emplace_back("socket", socket); // Construct and insert element at the end
 
 	exec_cmd("request", extras, info, PKG_ACTIVITY);
 }
 
 void socket_send_request(int fd, const shared_ptr<su_info> &info) {
 	write_key_token(fd, "uid", info->uid);
+	write_key_token_lli(fd, "capab", info->capab);
 	write_string_be(fd, "eof");
 }

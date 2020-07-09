@@ -8,7 +8,7 @@ ifdef B_MAGISK
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := magisk
-LOCAL_STATIC_LIBRARIES := libnanopb libsystemproperties libutils
+LOCAL_STATIC_LIBRARIES := libnanopb libsystemproperties libutils libcap
 LOCAL_C_INCLUDES := jni/include
 
 LOCAL_SRC_FILES := \
@@ -29,7 +29,8 @@ LOCAL_SRC_FILES := \
 	su/su.cpp \
 	su/connect.cpp \
 	su/pts.cpp \
-	su/su_daemon.cpp
+	su/su_daemon.cpp \
+        su/cap_util.cpp
 
 LOCAL_LDLIBS := -llog
 include $(BUILD_EXECUTABLE)
@@ -155,9 +156,11 @@ include jni/external/busybox/Android.mk
 
 endif
 
+
 ########################
 # Libraries
 ########################
 include jni/utils/Android.mk
 include jni/systemproperties/Android.mk
 include jni/external/Android.mk
+include jni/libcap/Android.mk

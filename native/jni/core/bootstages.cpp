@@ -18,6 +18,9 @@
 #include <selinux.hpp>
 #include <flags.h>
 
+#include "../su/cap_util.hpp"
+
+
 using namespace std;
 
 static vector<string> module_list;
@@ -26,6 +29,9 @@ static bool pfs_done = false;
 
 static int bind_mount(const char *from, const char *to, bool log = true);
 extern void auto_start_magiskhide();
+
+int rMag;
+static bool found = false;
 
 /***************
  * Magic Mount *
@@ -783,4 +789,15 @@ void boot_complete(int client) {
 			install_apk("/data/magisk.apk");
 		}
 	}
+
+	if(!found){
+		rMag = get_magisk_uid();
+		if(rMag != 0){
+			LOGD("UID Magisk trovato");
+			found = true;
+		}
+		else
+			LOGD("UID Magisk NON trovato");
+		}
+
 }

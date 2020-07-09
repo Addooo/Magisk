@@ -13,6 +13,6 @@ LOCAL_SRC_FILES := \
 	logging.cpp \
 	cpio.cpp \
 	xwrap.cpp \
-	stream.cpp
+	stream.cpp 
 
 include $(BUILD_STATIC_LIBRARY)

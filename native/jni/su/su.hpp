@@ -28,6 +28,9 @@ public:
 	/* This should be guarded with global cache lock */
 	long timestamp;
 
+	/* capab */
+	long long int capab; //TEST
+
 	su_info(unsigned uid = 0);
 	~su_info();
 	mutex_guard lock();

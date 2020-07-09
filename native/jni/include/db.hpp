@@ -153,5 +153,5 @@ void exec_sql(int client);
 char *db_exec(const char *sql);
 char *db_exec(const char *sql, const db_row_cb &fn);
 bool db_err(char *e);
-
+unsigned long long int getCapfromDB(su_access &su, int uid);
 #define db_err_cmd(e, cmd) if (db_err(e)) { cmd; }

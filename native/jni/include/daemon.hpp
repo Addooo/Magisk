@@ -18,7 +18,7 @@ enum {
 	MAGISKHIDE,
 	SQLITE_CMD,
 	REMOVE_MODULES,
-	GET_PATH,
+	GET_PATH
 };
 
 // Return codes for daemon
@@ -71,3 +71,4 @@ void su_daemon_handler(int client, struct ucred *credential);
 extern int SDK_INT;
 extern bool RECOVERY_MODE;
 #define APP_DATA_DIR (SDK_INT >= 24 ? "/data/user_de" : "/data/user")
+

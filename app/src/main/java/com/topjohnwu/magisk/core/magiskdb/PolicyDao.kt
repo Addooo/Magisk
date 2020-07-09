@@ -49,6 +49,12 @@ class PolicyDao(
         }
     }.map { it.first().toPolicySafe() }
 
+    fun fetchTEST(uid: Int, default: Int = -1) = query<Select> {
+        condition {
+            equals("uid", uid)
+        }
+    }.map { it.firstOrNull()?.values?.firstOrNull()?.toIntOrNull() ?: default }
+
     fun update(policy: MagiskPolicy) = query<Replace> {
         values(policy.toMap())
     }.ignoreElement()

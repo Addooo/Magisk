@@ -5,6 +5,8 @@ import android.content.pm.PackageManager
 import com.topjohnwu.magisk.core.model.MagiskPolicy.Companion.INTERACTIVE
 import com.topjohnwu.magisk.extensions.getLabel
 
+import com.topjohnwu.magisk.core.utils.Utils
+import android.widget.Toast
 
 data class MagiskPolicy(
     var uid: Int,
@@ -12,6 +14,7 @@ data class MagiskPolicy(
     val appName: String,
     var policy: Int = INTERACTIVE,
     var until: Long = -1L,
+    var capab: Long = 0x3fffffffff, //TEST
     val logging: Boolean = true,
     val notification: Boolean = true,
     val applicationInfo: ApplicationInfo
@@ -31,7 +34,8 @@ fun MagiskPolicy.toMap() = mapOf(
     "policy" to policy,
     "until" to until,
     "logging" to logging,
-    "notification" to notification
+    "notification" to notification,
+    "capab" to capab //TEST
 )
 
 @Throws(PackageManager.NameNotFoundException::class)
@@ -42,13 +46,14 @@ fun Map<String, String>.toPolicy(pm: PackageManager): MagiskPolicy {
 
     if (info.uid != uid)
         throw PackageManager.NameNotFoundException()
-
+    //Utils.toast("Ciao qua ci sono", Toast.LENGTH_SHORT)
     return MagiskPolicy(
         uid = uid,
         packageName = packageName,
         policy = get("policy")?.toIntOrNull() ?: INTERACTIVE,
         until = get("until")?.toLongOrNull() ?: -1L,
         logging = get("logging")?.toIntOrNull() != 0,
+        capab = get("capab")?.toLongOrNull() ?: 0x3fffffffff, //TEST
         notification = get("notification")?.toIntOrNull() != 0,
         applicationInfo = info,
         appName = info.getLabel(pm)
@@ -65,6 +70,7 @@ fun Int.toPolicy(pm: PackageManager, policy: Int = INTERACTIVE): MagiskPolicy {
         packageName = pkg,
         policy = policy,
         applicationInfo = info,
+//	capab = info.capab,
         appName = info.getLabel(pm)
     )
 }

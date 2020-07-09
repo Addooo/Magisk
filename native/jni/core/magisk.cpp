@@ -11,7 +11,28 @@
 #include <selinux.hpp>
 #include <flags.h>
 
+//per le capabilities
+#include <sys/capability.h>
+
+//#include <linux/capability.h>
+
+#include <libcap.h>
+#include <include/sys/capability.h>
+
+
+//in aggiunta per la funzione di test
+#include <linux/types.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 using namespace std::literals;
+static int testcap();
+
+
 
 [[noreturn]] static void usage() {
 	fprintf(stderr,
@@ -37,8 +58,8 @@ Advanced Options (Internal APIs):
    --clone-attr SRC DEST     clone permission, owner, and selinux context
    --clone SRC DEST          clone SRC to DEST
    --sqlite SQL              exec SQL commands to Magisk database
-   --path                    print Magisk tmpfs mount path
-
+   --path                    print internal tmpfs mount path
+   --cap		     use capabilities
 Available applets:
 )EOF");
 
@@ -116,12 +137,11 @@ int magisk_main(int argc, char *argv[]) {
 		write_int(fd, REMOVE_MODULES);
 		return read_int(fd);
 	} else if (argv[1] == "--path"sv) {
-		int fd = connect_daemon();
-		write_int(fd, GET_PATH);
-		char *path = read_string(fd);
-		printf("%s\n", path);
+		// TODO: hardcode /sbin for now, actual logic will be used for Android 11
+		printf("/sbin\n");
 		return 0;
 	}
+
 #if 0
 	/* Entry point for testing stuffs */
 	else if (argv[1] == "--test"sv) {

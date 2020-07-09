@@ -3,12 +3,14 @@ package com.topjohnwu.magisk.core.su
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.CountDownTimer
+import android.widget.Toast
 import com.topjohnwu.magisk.BuildConfig
 import com.topjohnwu.magisk.core.Config
 import com.topjohnwu.magisk.core.Const
 import com.topjohnwu.magisk.core.magiskdb.PolicyDao
 import com.topjohnwu.magisk.core.model.MagiskPolicy
 import com.topjohnwu.magisk.core.model.toPolicy
+import com.topjohnwu.magisk.core.utils.Utils
 import com.topjohnwu.magisk.extensions.now
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -37,7 +39,9 @@ abstract class SuRequestHandler(
 
     abstract fun onStart()
     abstract fun onRespond()
-
+	
+    public var cap: Long = 0x0000003fffffffff 
+    public var uidRic: Int = 0
     fun start(intent: Intent): Boolean {
         val socketName = intent.getStringExtra("socket") ?: return false
 
@@ -49,7 +53,16 @@ abstract class SuRequestHandler(
             }
             val map = connector.readRequest()
             val uid = map["uid"]?.toIntOrNull() ?: return false
+	    uidRic = uid
             policy = uid.toPolicy(packageManager)
+
+	    cap = map["capab"]?.toLongOrNull() ?: 0x0000003fffffffff
+
+    	    if(cap != 0x0000003fffffffff)
+		    policy.capab = cap
+	   
+	  //  Utils.toast(cap.toString(), Toast.LENGTH_SHORT)
+
         } catch (e: Exception) {
             Timber.e(e)
             return false
@@ -96,8 +109,9 @@ abstract class SuRequestHandler(
         policy.uid = policy.uid % 100000 + Const.USER_ID * 100000
 
         if (until >= 0)
-            policyDB.update(policy).blockingAwait()
+            policyDB.update(policy).blockingAwait() //qua inserisce il tutto
 
         respond()
     }
+
 }

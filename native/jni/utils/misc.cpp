@@ -20,6 +20,8 @@
 int fork_dont_care() {
 	int pid = xfork();
 	if (pid) {
+		//si ferma fino a quando non arriva un cambiamento nello stato del figlio
+		//the child terminated; the child was stopped by a signal; or the child was resumed by a  signal
 		waitpid(pid, nullptr, 0);
 		return pid;
 	} else if ((pid = xfork())) {
@@ -107,6 +109,9 @@ int exec_command(exec_t &exec) {
 	// Call the pre-exec callback
 	if (exec.pre_exec)
 		exec.pre_exec();
+	
+	//for(int i = 0; exec.argv[i] != NULL; i++)
+	//	LOGD("EXEC exec.argv[%d]: %s ", i, exec.argv[i]);
 
 	execve(exec.argv[0], (char **) exec.argv, environ);
 	PLOGE("execve %s", exec.argv[0]);

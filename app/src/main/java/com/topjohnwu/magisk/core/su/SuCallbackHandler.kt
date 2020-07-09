@@ -131,11 +131,12 @@ object SuCallbackHandler : ProviderCallHandler {
     private fun notify(context: Context, policy: MagiskPolicy) {
         if (policy.notification && Config.suNotification == Config.Value.NOTIFICATION_TOAST) {
             val resId = if (policy.policy == MagiskPolicy.ALLOW)
-                R.string.su_allow_toast
+                 R.string.su_allow_toast	
             else
                 R.string.su_deny_toast
 
             Utils.toast(context.getString(resId, policy.appName), Toast.LENGTH_SHORT)
+
         }
     }
 }

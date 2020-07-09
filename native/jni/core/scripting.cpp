@@ -81,4 +81,5 @@ void install_apk(const char *apk) {
 	char cmds[sizeof(install_script) + 4096];
 	sprintf(cmds, install_script, apk);
 	exec_command_sync(exec, BBEXEC_CMD, "-c", cmds);
+
 }

@@ -332,6 +332,7 @@ def build_binary(args):
         run_ndk_build('B_TEST=1 B_64BIT=1')
 
 
+
 def build_apk(args, module):
     build_type = 'Release' if args.release else 'Debug'
 
