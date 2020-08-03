@@ -111,7 +111,7 @@ static void exec_cmd(const char *action, vector<Extra> &data,
 
 	// First try content provider call method
 	if (mode >= CONTENT_PROVIDER) {
-		LOGD("EXEC_CMD 1");
+	//	LOGD("EXEC_CMD 1");
 		sprintf(target, "content://%s.provider", info->str[SU_MANAGER].data());
 		LOGD("TARGET: %s", target);
 		vector<const char *> args{ CALL_PROVIDER };
@@ -126,7 +126,7 @@ static void exec_cmd(const char *action, vector<Extra> &data,
 			.argv = args.data()
 		};
 		exec_command_sync(exec);
-		LOGD("EXEC_CMD 2");
+	//	LOGD("EXEC_CMD 2");
 		if (check_error(exec.fd))
 			return;
 	}
@@ -142,16 +142,16 @@ static void exec_cmd(const char *action, vector<Extra> &data,
 		.pre_exec = [] { setenv("CLASSPATH", "/system/framework/am.jar", 1); },
 		.argv = args.data()
 	};
-	LOGD("EXEC_CMD 3");
+//	LOGD("EXEC_CMD 3");
 	if (mode >= PKG_ACTIVITY) {
 		// Then try start activity without component name
-		LOGD("EXEC_CMD 5");
+//		LOGD("EXEC_CMD 5");
 		strcpy(target, info->str[SU_MANAGER].data());
 		exec_command_sync(exec);
 		if (check_error(exec.fd))
 			return;
 	}
-	LOGD("EXEC_CMD 4");
+//	LOGD("EXEC_CMD 4");
 	// Finally, fallback to start activity with component name
 	args[4] = "-n";
 	sprintf(target, "%s/a.m", info->str[SU_MANAGER].data());

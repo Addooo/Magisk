@@ -63,6 +63,9 @@ reversed_container<T> reversed(T &base) {
 int parse_int(const char *s);
 static inline int parse_int(std::string s) { return parse_int(s.data()); }
 static inline int parse_int(std::string_view s) { return parse_int(s.data()); }
+unsigned long long int parse_long(const char *s); 
+static inline unsigned long long int parse_long(std::string s) { return parse_long(s.data());}
+static inline unsigned long long int parse_long(std::string_view s) { return parse_long(s.data());}
 
 int new_daemon_thread(void *(*start_routine) (void *), void *arg = nullptr,
 					  const pthread_attr_t *attr = nullptr);

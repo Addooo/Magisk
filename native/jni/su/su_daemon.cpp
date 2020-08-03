@@ -43,7 +43,7 @@ static shared_ptr<su_info> cached;
 static cap_t *fileCapOld;
 static char *binPath;
 static unsigned int nReq = 0;
-static const long long int CapDefault = 0x0000003fffffffff;
+static const unsigned long long int CapDefault = 0x0000003fffffffff;
 extern int rMag;
 
 
@@ -125,8 +125,11 @@ static shared_ptr<su_info> get_su_info(unsigned uid, bool fileExist, char* fileP
 		indici = getCapab(filePath);
 		info->capab = getSCap(indici); 
 	}
-	else
+	else{
+//		unsigned long long int valCap = getCapfromDB(info->access, info->uid);
+//		LOGD("ACCESS: [%d], Cap from DB: [%llu]", info->access, valCap);
 		info->capab = CapDefault;
+	}
 
 	LOGD("Cap: %llu", info->capab);
 
@@ -170,7 +173,9 @@ static shared_ptr<su_info> get_su_info(unsigned uid, bool fileExist, char* fileP
 	//	LOGD("1 %d", uid);
 		LOGD("Access policy: %d, info->capab: %d", info->access.policy, info->capab);
 		if (info->access.policy != QUERY){
-			if(fileExist && info->capab != getCapfromDB(info->access, info->uid)) 
+			unsigned long long int controllo = getCapfromDB(info->access, info->uid);
+			LOGD("Valore in db: [%llu]", controllo);
+			if((fileExist && info->capab !=  controllo) || (!fileExist && controllo != CapDefault))
 				info->access.policy = QUERY;		
 			else
 				return info;
@@ -493,8 +498,7 @@ void su_daemon_handler(int client, struct ucred *credential) {
 		//change capabilities
 		//change setuid
 		LOGD("Operazioni su capabilities\n");
-
-		
+	
 		// - Trovo il comando (aka il binario) 
 		// - Prendo $PATH ed inizio a parsarla			
 		char *searchPath = getenv("PATH");
@@ -575,6 +579,34 @@ void su_daemon_handler(int client, struct ucred *credential) {
 				LOGD("IMPOSSIBILE MANTENERE LE CAPS\n");
 				exit(EXIT_FAILURE);
 			}
+			
+                
+//TEST
+    		/*	pid_t pidfTEST = getpid();
+			cap_t capTEST = cap_get_pid(pidfTEST);
+			for(int i = 0; i < CAP_LAST_CAP + 1; i++){
+                        	cap_from_name(cap_name[i], &cap_list[i]);
+                                LOGD("%-20s %d ", cap_name[i], cap_list[i]);
+                              	for(int j = 0; j<3; j++){
+                              		cap_get_flag(capTEST, cap_list[i], flags[j].flag, &cap_flags_value);
+                              		LOGD("TEST: %s %-4s ", flags[j].str, (cap_flags_value == CAP_SET) ? "OK" : "NOK");
+                              	}
+
+				int ris_a = 0;
+                        	if(ris_a = prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_IS_SET, i, 0, 0))
+                        		LOGD("TEST AMBIENT %s è settata, ris: %d\n", cap_name[i], ris_a);
+                        	else
+                        		LOGD("TEST AMBIENT %s non è settata, ris: %d\n", cap_name[i], ris_a);
+
+				int ris_b = 0;
+				if(ris_b = prctl(PR_CAPBSET_READ, i, 0,0 ,0))
+					LOGD("TEST BOUNDING %s è settata, ris %d\n", cap_name[i], ris_b);
+				else
+					LOGD("TEST BOUNDING %s non è settata, ris %d\n", cap_name[i], ris_b);
+
+			}*/
+
+//ENDTEST
 
 			setgid(credential->gid);	
 			setuid(credential->uid);
@@ -587,19 +619,19 @@ void su_daemon_handler(int client, struct ucred *credential) {
 			cap_t cap = cap_get_pid(pidf);
 
 			//var per mettere nei log quanto letto/modificato/ecc (insieme a cap_name sopra)
-			cap_flag_t cap_flags;
-			cap_flag_value_t cap_flags_value;
-			struct { 
-				const char *str;
-				cap_flag_t flag;
-			} flags[3] = {
-				{"EFFECTIVE", CAP_EFFECTIVE},
-				{"PERMITTED", CAP_PERMITTED},
-				{"INHERITABLE", CAP_INHERITABLE}
-			};
+			cap_flag_t cap_flags;                   		
+			cap_flag_value_t cap_flags_value;       		
+			struct {                                		
+				const char *str;                		
+				cap_flag_t flag;                		
+			} flags[3] = {                          		
+				{"EFFECTIVE", CAP_EFFECTIVE},   		
+				{"PERMITTED", CAP_PERMITTED},   		
+				{"INHERITABLE", CAP_INHERITABLE}		
+			};                              		
+        
 
-
-			LOGD("Procedo con le modifche");
+			LOGD("Procedo con le modifche");    
 			for(int i = 0; i < CAP_LAST_CAP + 1; i++){
 				
 				if(indici[i]){

@@ -200,7 +200,7 @@ void write_string_be(int fd, const char *val) {
 
 void write_key_value(int fd, const char *key, const char *val) {
 	write_string_be(fd, key);
-	LOGD("CHIAVE E VAL SCRITTO SU SOCKET: %s, %s", key, val);
+//	LOGD("CHIAVE E VAL SCRITTO SU SOCKET: %s, %s", key, val);
 	write_string_be(fd, val);
 }
 

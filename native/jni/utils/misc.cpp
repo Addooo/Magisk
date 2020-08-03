@@ -188,6 +188,17 @@ int parse_int(const char *s) {
 	return val;
 }
 
+unsigned long long int parse_long(const char *s) {
+	unsigned long long int val = 0;
+	char c;
+	while ((c = *(s++))) {
+		if (c > '9' || c < '0')
+			return -1;
+		val = val * 10 + c - '0';
+	}
+	return val;
+}
+
 uint32_t binary_gcd(uint32_t u, uint32_t v) {
 	if (u == 0) return v;
 	if (v == 0) return u;

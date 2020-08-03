@@ -342,7 +342,7 @@ unsigned long long int getCapfromDB(su_access &su, int uid){
 			"WHERE uid=%d AND (until=0 OR until>%li)", uid, time(nullptr));
 	unsigned long long int risCap = 0x3fffffffff;
 	err = db_exec(query, [&](db_row &row) -> bool {
-		risCap = parse_int(row["capab"]);
+		risCap = parse_long(row["capab"]);
 		return true;
 	});
 	db_err_cmd(err, return 1);
