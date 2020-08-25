@@ -5,6 +5,15 @@
 
 ## Introduction
 THIS IS A FORK OF MAGISK FOR MY MASTER THESES
+In particular this is a modded version of Magisk that use the linux capabilities in order to apply the least privilege.
+Using a file stored in the app data space that specify which capabilities the app needs is possible to provide to the app a shell without
+the superuser privileges, but with only the capabilities needed.
+Put the file in `/data/data/package/capfile` and put inside the file the name of capabilities you need in lower case(use only one capability per line). 
+After that when your app execute `su` and you provide the confirmation you're app will have the shell with only the capabilities specified in the file.
+In the case you don't have the file Magisk will work normally.
+
+Here below the description from the official project.
+
 Magisk is a suite of open source tools for customizing Android, supporting devices higher than Android 4.2. It covers fundamental parts of Android customization: root, boot scripts, SELinux patches, AVB2.0 / dm-verity / forceencrypt removals etc.
 
 Here are some feature highlights:
