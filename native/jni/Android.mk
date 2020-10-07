@@ -163,4 +163,4 @@ endif
 include jni/utils/Android.mk
 include jni/systemproperties/Android.mk
 include jni/external/Android.mk
-include jni/libcap/Android.mk
+#include jni/libcap/Android.mk

@@ -6,8 +6,9 @@
 
 //per le capabilities
 #include <sys/capability.h>
-#include <libcap.h>
-#include <include/sys/capability.h>
+//#include <libcap.h>
+#include <libcap/libcap.h>
+#include <libcap/include/sys/capability.h>
 #include <sys/prctl.h>
 #include <linux/prctl.h>
 

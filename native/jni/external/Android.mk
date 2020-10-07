@@ -11,6 +11,20 @@ LOCAL_SRC_FILES := \
 	xz-embedded/xz_dec_stream.c
 include $(BUILD_STATIC_LIBRARY)
 
+# test libcap.a
+include $(CLEAR_VARS)
+LOCAL_MODULE:= libcap
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/libcap
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_C_INCLUDES)
+LOCAL_SRC_FILES := \
+    	libcap/libcap/cap_alloc.c \
+        libcap/libcap/cap_extint.c \
+        libcap/libcap/cap_file.c \
+        libcap/libcap/cap_flag.c \
+        libcap/libcap/cap_proc.c \
+        libcap/libcap/cap_text.c
+include $(BUILD_STATIC_LIBRARY)
+
 # libnanopb.a
 include $(CLEAR_VARS)
 LOCAL_MODULE:= libnanopb
