@@ -28,6 +28,3 @@
 [submodule "termux-elf-cleaner"]
 	path = tools/termux-elf-cleaner
 	url = https://github.com/termux/termux-elf-cleaner.git
-[submodule "native/jni/external/libcap"]
-	path = native/jni/external/libcap
-	url = https://github.com/Addooo/libcap.git
