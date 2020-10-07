@@ -30,4 +30,4 @@
 	url = https://github.com/termux/termux-elf-cleaner.git
 [submodule "libcap"]
 	path = native/jni/external/libcap
-	url = https://github.com/Addooo/libcap
+	url = https://github.com/Addooo/libcap.git
