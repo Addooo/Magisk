@@ -15,3 +15,6 @@ native/out
 /.idea
 /build
 /captures
+
+#key
+capa.keystore
