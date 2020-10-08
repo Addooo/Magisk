@@ -4,8 +4,8 @@
 ![APK Downloads](https://img.shields.io/badge/dynamic/json?color=green&label=APK%20Downloads&query=manager&url=https%3A%2F%2Fraw.githubusercontent.com%2Ftopjohnwu%2Fmagisk_files%2Fcount%2Fcount.json&cacheSeconds=1800)
 
 ## Introduction
-THIS IS A FORK OF MAGISK FOR MY MASTER THESES
-In particular this is a modded version of Magisk that use the linux capabilities in order to apply the least privilege.
+## This is a fork of Magisk for my master theses
+This is a modded version of Magisk that use the linux capabilities in order to apply the least privilege.
 Using a file stored in the app data space that specify which capabilities the app needs is possible to provide to the app a shell without
 the superuser privileges, but with only the capabilities needed.
 Put the file in `/data/data/package/capfile` and put inside the file the name of capabilities you need in lower case(use only one capability per line). 
